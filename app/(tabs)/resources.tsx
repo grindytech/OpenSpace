@@ -53,9 +53,8 @@ export default function ResourcesScreen() {
     },
   ]);
 
-  const getStorageUpgradeCost: StorageUpgrade = (resourceName: string) => {
+  const getStorageUpgradeCost = (resourceName: string): StorageUpgrade => {
     let cost = storageUpgradeCosts.find(resource => resource.name == resourceName);
-
     if (cost != undefined) {
       return cost;
     } else {
@@ -66,13 +65,15 @@ export default function ResourcesScreen() {
   const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
 
   const mineResource = (resourceName: string) => {
-
-    console.log("Mine: ", resourceName);
+    const successRate = resourceName === 'Bitcoin' ? 0.25 : 1; // Success rate adjustment for Bitcoin
 
     setResources((prevResources) =>
       prevResources.map((resource) =>
         resource.name === resourceName
-          ? { ...resource, amount: resource.amount + 1 }
+          ? {
+              ...resource,
+              amount: Math.random() < successRate ? resource.amount + 1 : resource.amount,
+            }
           : resource
       )
     );
@@ -80,7 +81,7 @@ export default function ResourcesScreen() {
     if (selectedResource && selectedResource.name === resourceName) {
       setSelectedResource({
         ...selectedResource,
-        amount: selectedResource.amount + 1
+        amount: Math.random() < successRate ? selectedResource.amount + 1 : selectedResource.amount,
       });
     }
   };
