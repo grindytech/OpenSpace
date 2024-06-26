@@ -5,6 +5,13 @@ import ResourceItem from './ResourceItem';
 interface Resource {
   name: string;
   amount: number;
+  description: string;
+  storageUpgradeCost: {
+    gems: number;
+    metal: number;
+  };
+  gemMiner: number;
+  advancedDrill: number;
 }
 
 interface ResourceTableProps {
