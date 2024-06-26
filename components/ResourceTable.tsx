@@ -1,18 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import ResourceItem from './ResourceItem';
-
-interface Resource {
-  name: string;
-  amount: number;
-  description: string;
-  storageUpgradeCost: {
-    gems: number;
-    metal: number;
-  };
-  gemMiner: number;
-  advancedDrill: number;
-}
+import {Resource} from '@/common/type';
 
 interface ResourceTableProps {
   resources: Resource[];

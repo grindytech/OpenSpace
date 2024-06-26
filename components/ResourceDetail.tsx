@@ -1,18 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
+import { Resource, StorageUpgrade} from '@/common/type';
 
 interface ResourceDetailProps {
-  resource: {
-    name: string;
-    amount: number;
-    description: string;
-    storageUpgradeCost: {
-      gems: number;
-      metal: number;
-    };
-    gemMiner: number;
-    advancedDrill: number;
-  };
+  resource: Resource;
+  upgradeCosts: StorageUpgrade,
   onMine: () => void;
   onUpgradeStorage: () => void;
   onGetMiner: () => void;
@@ -23,6 +15,7 @@ interface ResourceDetailProps {
 
 const ResourceDetail: React.FC<ResourceDetailProps> = ({
   resource,
+  upgradeCosts,
   onMine,
   onUpgradeStorage,
   onGetMiner,
@@ -41,12 +34,20 @@ const ResourceDetail: React.FC<ResourceDetailProps> = ({
         <Text style={styles.upgradeTitle}>Storage Upgrade</Text>
         <Text>Upgrade your {resource.name} storage size to 819,200.</Text>
         <Text>Time remaining until full storage: N/A</Text>
-        <Text>Costs {resource.storageUpgradeCost.gems} Gems, {resource.storageUpgradeCost.metal} Metal.</Text>
+        <Text>
+          Costs{' '}
+          {upgradeCosts.costs.map((cost, index) => (
+            <Text key={index}>
+              {index > 0 && index === upgradeCosts.costs.length - 1 ? ' and ' : index > 0 ? ', ' : ''}
+              {`${cost.amount} ${cost.name}`}
+            </Text>
+          ))}
+          .
+        </Text>
         <Button title="Upgrade Storage" onPress={onUpgradeStorage} />
       </View>
 
       <View style={styles.minerContainer}>
-        <Text style={styles.minerTitle}>Gem Miner: {resource.gemMiner}</Text>
         <Text>Build an improved pickaxe to mine Gems.</Text>
         <Text>Produces 1 gem per second.</Text>
         <Text>Costs 15 Metal, 10 Gems.</Text>
@@ -55,7 +56,6 @@ const ResourceDetail: React.FC<ResourceDetailProps> = ({
       </View>
 
       <View style={styles.drillContainer}>
-        <Text style={styles.drillTitle}>Advanced Drill: {resource.advancedDrill}</Text>
         <Text>Advanced Drills mine gem at mass. Because of the toughness of the drill needed it is slower than the heavy drill.</Text>
         <Text>Produces 4 Gems per second.</Text>
         <Text>Uses 2 Energy per second.</Text>

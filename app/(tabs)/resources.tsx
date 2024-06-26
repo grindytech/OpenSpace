@@ -1,70 +1,74 @@
 import { StyleSheet, View } from 'react-native';
 import ResourceTable from '@/components/ResourceTable';
 import ResourceDetail from '@/components/ResourceDetail';
+import { Resource, StorageUpgrade } from '@/common/type';
 import { useState } from 'react';
 
-interface Resource {
-  name: string;
-  amount: number;
-  description: string;
-  storageUpgradeCost: {
-    gems: number;
-    metal: number;
-  };
-  gemMiner: number;
-  advancedDrill: number;
-}
 
 export default function ResourcesScreen() {
   const [resources, setResources] = useState<Resource[]>([
     {
-      name: 'Oil',
-      amount: 0,
-      description: 'Oil are one of the primary resources. They are used for advanced machines and for powerful tools and components. They are more useful in later game.',
-      storageUpgradeCost: {
-        gems: 409600,
-        metal: 163840,
-      },
-      gemMiner: 0,
-      advancedDrill: 0,
-    },
-    {
-      name: 'Metal',
-      amount: 0,
-      description: 'Metal are one of the primary resources. They are used for advanced machines and for powerful tools and components. They are more useful in later game.',
-      storageUpgradeCost: {
-        gems: 409600,
-        metal: 163840,
-      },
-      gemMiner: 0,
-      advancedDrill: 0,
-    },
-    {
-      name: 'Gems',
-      amount: 0,
-      description: 'Gems are one of the primary resources. They are used for advanced machines and for powerful tools and components. They are more useful in later game.',
-      storageUpgradeCost: {
-        gems: 409600,
-        metal: 163840,
-      },
-      gemMiner: 0,
-      advancedDrill: 0,
-    },
-    {
       name: 'Bitcoin',
       amount: 0,
-      description: 'Bitcoin is a basic resource used for various constructions and upgrades.',
-      storageUpgradeCost: {
-        gems: 1000,
-        metal: 500,
-      },
-      gemMiner: 0,
-      advancedDrill: 0,
+      description: 'Bitcoin is a basic resource used for upgrades.',
+    },
+
+    {
+      name: 'Steel',
+      amount: 0,
+      description: 'Steel is a basic resource used for upgrades.',
     },
   ]);
+
+  const [storageUpgradeCosts, setStorageUpgradeCosts] = useState<StorageUpgrade[]>([
+    {
+      name: 'Bitcoin',
+      costs: [
+        {
+          name: 'Bitcoin',
+          amount: 1,
+          description: 'Bitcoin is a basic resource used for upgrades.',
+        },
+        {
+          name: 'Steel',
+          amount: 5,
+          description: 'Steel is a basic resource used for upgrades.',
+        },
+      ]
+    },
+    {
+      name: 'Steel',
+      costs: [
+        {
+          name: 'Bitcoin',
+          amount: 1,
+          description: 'Bitcoin is a basic resource used for upgrades.',
+        },
+        {
+          name: 'Steel',
+          amount: 5,
+          description: 'Steel is a basic resource used for upgrades.',
+        },
+      ]
+    },
+  ]);
+
+  const getStorageUpgradeCost: StorageUpgrade = (resourceName: string) => {
+    let cost = storageUpgradeCosts.find(resource => resource.name == resourceName);
+
+    if (cost != undefined) {
+      return cost;
+    } else {
+      return storageUpgradeCosts[0];
+    }
+  }
+
   const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
 
   const mineResource = (resourceName: string) => {
+
+    console.log("Mine: ", resourceName);
+
     setResources((prevResources) =>
       prevResources.map((resource) =>
         resource.name === resourceName
@@ -72,13 +76,17 @@ export default function ResourcesScreen() {
           : resource
       )
     );
+
     if (selectedResource && selectedResource.name === resourceName) {
-      setSelectedResource({ ...selectedResource, amount: selectedResource.amount + 1 });
+      setSelectedResource({
+        ...selectedResource,
+        amount: selectedResource.amount + 1
+      });
     }
   };
 
-  const handleSelectResource = (resource: Resource) => {
-    setSelectedResource(resource);
+  const handleSelectResource = (warehouse: Resource) => {
+    setSelectedResource(warehouse);
   };
 
   const upgradeStorage = (resourceName: string) => {
@@ -110,6 +118,7 @@ export default function ResourcesScreen() {
         <View style={styles.detailContainer}>
           <ResourceDetail
             resource={selectedResource}
+            upgradeCosts={getStorageUpgradeCost(selectedResource.name)}
             onMine={() => mineResource(selectedResource.name)}
             onUpgradeStorage={() => upgradeStorage(selectedResource.name)}
             onGetMiner={() => getMiner(selectedResource.name)}
