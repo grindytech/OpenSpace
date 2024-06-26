@@ -27,9 +27,9 @@ export default function TabLayout() {
         headerShown: useClientOnlyValue(false, true),
       }}>
       <Tabs.Screen
-        name="index"
+        name="resources"
         options={{
-          title: 'Tab One',
+          title: 'Resources',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
             <Link href="/modal" asChild>
@@ -48,9 +48,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="research"
         options={{
-          title: 'Tab Two',
+          title: 'Research',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
